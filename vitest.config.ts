@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "node",
     globals: false,
     include: ["src/**/*.test.ts"],
+    setupFiles: ["src/__tests__/setup.ts"],
     env: {
       AUTH_SECRET: "test-secret-value-at-least-32-chars!!",
       ADMIN_EMAIL: "test@example.com",
