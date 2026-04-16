@@ -6,6 +6,13 @@ export default defineConfig({
     environment: "node",
     globals: false,
     include: ["src/**/*.test.ts"],
+    env: {
+      AUTH_SECRET: "test-secret-value-at-least-32-chars!!",
+      ADMIN_EMAIL: "test@example.com",
+      ADMIN_PASSWORD_HASH: "$2a$10$test",
+      TURSO_DATABASE_URL: "libsql://test.turso.io",
+      TURSO_AUTH_TOKEN: "test-token",
+    },
   },
   resolve: {
     alias: {
