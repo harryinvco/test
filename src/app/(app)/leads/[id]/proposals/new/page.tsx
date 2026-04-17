@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { StreamingMarkdown } from "@/components/agents/StreamingMarkdown";
 
@@ -22,7 +22,7 @@ export default function NewProposalPage() {
       return;
     }
     sessionStorage.removeItem(key);
-    setBrief(value);
+    startTransition(() => setBrief(value));
   }, [leadId, router, search]);
 
   if (!brief) return <div className="text-sm text-muted-foreground">Loading…</div>;
