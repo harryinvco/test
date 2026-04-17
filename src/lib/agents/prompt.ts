@@ -27,7 +27,6 @@ function block(text: string): TextBlock {
 
 function leadSnapshot(lead: Lead): string {
   const value = formatEuros(lead.estimatedValueCents);
-  const cents = lead.estimatedValueCents ?? 0;
   return [
     `## Lead snapshot`,
     `- Name: ${lead.name}`,
@@ -36,7 +35,7 @@ function leadSnapshot(lead: Lead): string {
     `- Industry: ${lead.industry.replace("_", " ")}`,
     `- Source: ${lead.source}`,
     `- Stage: ${lead.stage}`,
-    `- Estimated value: ${value} (${cents} cents)`,
+    `- Estimated value: ${value}`,
     lead.followUpDate ? `- Follow-up date: ${lead.followUpDate}` : null,
   ].filter(Boolean).join("\n");
 }

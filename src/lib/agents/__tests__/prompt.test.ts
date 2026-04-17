@@ -26,9 +26,9 @@ describe("buildProposalPrompt", () => {
     expect(p.system[0].text).toMatch(/Innovaco/);
     expect(p.system[0].text).toMatch(/Summary/);
     expect(p.system[0].text).toMatch(/Pricing/);
-    // Lead block contains company and euro value
+    // Lead block contains company and euro value (formatEuros uses en-IE: "€5,000.00")
     expect(p.system[1].text).toMatch(/Acme/);
-    expect(p.system[1].text).toMatch(/5000/); // 500_000 cents = €5,000
+    expect(p.system[1].text).toMatch(/€5,000\.00/);
     // Activity block contains both activities chronologically
     expect(p.system[2].text).toMatch(/Discovery call/);
     expect(p.system[2].text).toMatch(/Wants a pilot/);
