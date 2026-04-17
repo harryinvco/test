@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Bot, Receipt, Settings } from "lucide-react";
+import { LayoutDashboard, Inbox, Users, Bot, Receipt, Settings } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/leads", label: "Leads", icon: Inbox },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/agents", label: "Agents", icon: Bot },
   { href: "/admin", label: "Admin", icon: Receipt },
