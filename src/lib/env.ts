@@ -6,6 +6,9 @@ const EnvSchema = z.object({
   ADMIN_PASSWORD_HASH: z.string().min(1, "ADMIN_PASSWORD_HASH is required"),
   TURSO_DATABASE_URL: z.string().url("TURSO_DATABASE_URL must be a URL"),
   TURSO_AUTH_TOKEN: z.string().min(1, "TURSO_AUTH_TOKEN is required"),
+  ANTHROPIC_API_KEY: z.string().min(1, "ANTHROPIC_API_KEY is required"),
+  AGENT_MODEL: z.string().default("claude-sonnet-4-6"),
+  AGENT_MONTHLY_BUDGET_USD: z.coerce.number().positive().default(50),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
