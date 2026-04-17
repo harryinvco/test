@@ -6,6 +6,16 @@ import remarkGfm from "remark-gfm";
 const TRAILER = "\u0000__AGENT_TRAILER__";
 const ERRMARK = "\u0000__AGENT_ERROR__";
 
+// If acc ends with a partial sentinel prefix (e.g. "\u0000__"), the trailing
+// bytes of the sentinel-to-be must not be rendered as body. Strip them.
+function stripSentinelPrefix(s: string): string {
+  const nulAt = s.lastIndexOf("\u0000");
+  if (nulAt < 0) return s;
+  const tail = s.slice(nulAt);
+  if (TRAILER.startsWith(tail) || ERRMARK.startsWith(tail)) return s.slice(0, nulAt);
+  return s;
+}
+
 type Result = { proposalId: string; runId: string };
 
 type Props = {
@@ -56,7 +66,7 @@ export function StreamingMarkdown({ endpoint, requestBody, initialBody = "", onC
           const markerAt = [trailerAt, errorAt].filter((i) => i >= 0).sort((a, b) => a - b)[0] ?? -1;
 
           if (markerAt === -1) {
-            visible = acc;
+            visible = stripSentinelPrefix(acc);
             setBody(visible);
           } else {
             visible = acc.slice(0, markerAt).replace(/\n$/, "");
