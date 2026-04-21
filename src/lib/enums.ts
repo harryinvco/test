@@ -12,8 +12,12 @@ export type ActivityType = typeof ACTIVITY_TYPE[number];
 
 export const AGENT_TYPE = ["proposal_draft", "proposal_revise"] as const;
 export const AGENT_STATUS = ["streaming", "completed", "failed", "cancelled"] as const;
-export const PROPOSAL_STATUS = ["draft"] as const;
+export const PROPOSAL_STATUS = ["draft", "sent", "accepted", "rejected"] as const;
+export const INVOICE_STATUS = ["draft", "sent", "paid", "overdue"] as const;
+export const EXPENSE_CATEGORY = ["software", "travel", "marketing", "office", "contractor", "other"] as const;
 
 export type AgentType = typeof AGENT_TYPE[number];
 export type AgentStatus = typeof AGENT_STATUS[number];
 export type ProposalStatus = typeof PROPOSAL_STATUS[number];
+export type InvoiceStatus = typeof INVOICE_STATUS[number];
+export type ExpenseCategory = typeof EXPENSE_CATEGORY[number];
