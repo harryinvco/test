@@ -29,6 +29,20 @@
       "when": 1776757500168,
       "tag": "0003_many_mesmero",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1776775279494,
+      "tag": "0004_rare_gargoyle",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1776776310406,
+      "tag": "0005_furry_wasp",
+      "breakpoints": true
     }
   ]
 }

@@ -209,3 +209,48 @@ export type Expense = typeof expenses.$inferSelect;
 export type ExpenseInsert = typeof expenses.$inferInsert;
 export type TimeEntry = typeof timeEntries.$inferSelect;
 export type TimeEntryInsert = typeof timeEntries.$inferInsert;
+
+export const noteTabs = sqliteTable(
+  "note_tabs",
+  {
+    id: text("id").primaryKey(),
+    date: text("date").notNull(),
+    label: text("label").notNull(),
+    position: integer("position").notNull(),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+    deletedAt: integer("deleted_at"),
+  },
+  (t) => ({
+    dateIdx: index("note_tabs_date_idx").on(t.date),
+    datePositionIdx: index("note_tabs_date_position_idx").on(t.date, t.position),
+    updatedIdx: index("note_tabs_updated_idx").on(sql`${t.updatedAt} DESC`),
+  }),
+);
+
+export const notes = sqliteTable(
+  "notes",
+  {
+    id: text("id").primaryKey(),
+    tabId: text("tab_id")
+      .notNull()
+      .references(() => noteTabs.id, { onDelete: "cascade" }),
+    date: text("date").notNull(),
+    titlePreview: text("title_preview").notNull().default(""),
+    content: text("content").notNull().default(""),
+    position: integer("position").notNull(),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+    deletedAt: integer("deleted_at"),
+  },
+  (t) => ({
+    tabPositionIdx: index("notes_tab_position_idx").on(t.tabId, t.position),
+    dateUpdatedIdx: index("notes_date_updated_idx").on(t.date, sql`${t.updatedAt} DESC`),
+    updatedIdx: index("notes_updated_idx").on(sql`${t.updatedAt} DESC`),
+  }),
+);
+
+export type NoteTab = typeof noteTabs.$inferSelect;
+export type NoteTabInsert = typeof noteTabs.$inferInsert;
+export type Note = typeof notes.$inferSelect;
+export type NoteInsert = typeof notes.$inferInsert;
