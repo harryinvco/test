@@ -110,7 +110,12 @@ export function InvoiceForm(props: Props) {
     <div className="max-w-3xl space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <Field label="Client">
-          <Select value={clientId || "__none"} onValueChange={(v) => setClientId(v === "__none" ? "" : v)}>
+          <Select
+            value={clientId || "__none"}
+            onValueChange={(v) => {
+              if (v !== null) setClientId(v === "__none" ? "" : v);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="(optional)" />
             </SelectTrigger>

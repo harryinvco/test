@@ -1,11 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { makeTestDb, type TestDb } from "@/db/__tests__/test-db";
 import { leads, proposals } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import {
-  _updateProposalStatus,
-  isValidProposalTransition,
-} from "@/lib/agents/proposals/actions";
+import { _updateProposalStatus } from "@/lib/agents/proposals/actions";
+import { isValidProposalTransition } from "@/lib/agents/proposals/status";
 
 async function insertLead(db: TestDb) {
   const id = crypto.randomUUID();

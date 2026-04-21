@@ -57,7 +57,7 @@ export function ExpenseInlineForm({ clients }: { clients: ClientOption[] }) {
     <div className="rounded-md border p-3">
       <div className="grid grid-cols-[7rem_8rem_7rem_10rem_10rem_1fr_6rem] items-center gap-2">
         <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        <Select value={category} onValueChange={(v) => v && setCategory(v as ExpenseCategory)}>
+        <Select value={category} onValueChange={(v) => { if (v) setCategory(v as ExpenseCategory); }}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -77,7 +77,12 @@ export function ExpenseInlineForm({ clients }: { clients: ClientOption[] }) {
           onChange={(e) => setAmountEuros(e.target.value)}
         />
         <Input placeholder="Vendor" value={vendor} onChange={(e) => setVendor(e.target.value)} />
-        <Select value={clientId || "__none"} onValueChange={(v) => setClientId(v === "__none" ? "" : v)}>
+        <Select
+          value={clientId || "__none"}
+          onValueChange={(v) => {
+            if (v !== null) setClientId(v === "__none" ? "" : v);
+          }}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Client (optional)" />
           </SelectTrigger>

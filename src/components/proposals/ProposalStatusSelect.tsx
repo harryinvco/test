@@ -11,10 +11,8 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { PROPOSAL_STATUS, type ProposalStatus } from "@/lib/enums";
-import {
-  updateProposalStatus,
-  isValidProposalTransition,
-} from "@/lib/agents/proposals/actions";
+import { updateProposalStatus } from "@/lib/agents/proposals/actions";
+import { isValidProposalTransition } from "@/lib/agents/proposals/status";
 
 type Props = {
   proposalId: string;
@@ -35,8 +33,8 @@ export function ProposalStatusSelect({
 
   const terminal = status === "accepted" || status === "rejected";
 
-  function onChange(next: string) {
-    if (next === status) return;
+  function onChange(next: string | null) {
+    if (!next || next === status) return;
     setError(null);
     const nextStatus = next as ProposalStatus;
     if (!isValidProposalTransition(status, nextStatus)) {

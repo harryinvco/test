@@ -63,7 +63,12 @@ export function TimeInlineForm({ clients }: { clients: ClientOption[] }) {
           value={hours}
           onChange={(e) => setHours(e.target.value)}
         />
-        <Select value={clientId || "__none"} onValueChange={(v) => setClientId(v === "__none" ? "" : v)}>
+        <Select
+          value={clientId || "__none"}
+          onValueChange={(v) => {
+            if (v !== null) setClientId(v === "__none" ? "" : v);
+          }}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Client" />
           </SelectTrigger>

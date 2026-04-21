@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { PROPOSAL_STATUS, type ProposalStatus } from "@/lib/enums";
+import { isValidProposalTransition } from "./status";
 import type { TestDb } from "@/db/__tests__/test-db";
 
 type AnyDb = typeof realDb | TestDb;
@@ -13,20 +14,6 @@ type AnyDb = typeof realDb | TestDb;
 async function requireAuth() {
   const session = await auth();
   if (!session?.user?.email) throw new Error("UNAUTHORIZED");
-}
-
-const VALID_TRANSITIONS: Record<ProposalStatus, ProposalStatus[]> = {
-  draft: ["sent"],
-  sent: ["accepted", "rejected"],
-  accepted: [],
-  rejected: [],
-};
-
-export function isValidProposalTransition(
-  from: ProposalStatus,
-  to: ProposalStatus,
-): boolean {
-  return VALID_TRANSITIONS[from].includes(to);
 }
 
 export async function _updateProposalStatus(
