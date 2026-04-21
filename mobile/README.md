@@ -15,7 +15,7 @@ Expo + React Native client for the Innovaco command center's notes module. Pairs
 ```sh
 cd mobile
 npm install
-npx expo install --fix     # align RN peer versions with SDK 53
+npx expo install --fix     # align RN peer versions with SDK 55
 ```
 
 ## Pointing at the backend
