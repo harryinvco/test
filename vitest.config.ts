@@ -13,11 +13,13 @@ export default defineConfig({
       ADMIN_PASSWORD_HASH: "$2a$10$test",
       TURSO_DATABASE_URL: "libsql://test.turso.io",
       TURSO_AUTH_TOKEN: "test-token",
+      ANTHROPIC_API_KEY: "sk-ant-test-key-xxxxxxxxxxxxxxxxxxxx",
     },
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "server-only": path.resolve(__dirname, "./src/__tests__/server-only-stub.ts"),
     },
   },
 });

@@ -9,3 +9,11 @@ export type Source = typeof SOURCE[number];
 export type LeadStage = typeof LEAD_STAGE[number];
 export type ClientStatus = typeof CLIENT_STATUS[number];
 export type ActivityType = typeof ACTIVITY_TYPE[number];
+
+export const AGENT_TYPE = ["proposal_draft", "proposal_revise"] as const;
+export const AGENT_STATUS = ["streaming", "completed", "failed", "cancelled"] as const;
+export const PROPOSAL_STATUS = ["draft"] as const;
+
+export type AgentType = typeof AGENT_TYPE[number];
+export type AgentStatus = typeof AGENT_STATUS[number];
+export type ProposalStatus = typeof PROPOSAL_STATUS[number];

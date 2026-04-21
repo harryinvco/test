@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getLeadById } from "@/lib/leads/queries";
 import { getActivitiesByLead } from "@/lib/activities/queries";
 import { getClientById } from "@/lib/clients/queries";
+import { getProposalsByLead } from "@/lib/agents/proposals/queries";
+import { ProposalsTab } from "@/components/agents/ProposalsTab";
 import { LeadDetailTabs } from "@/components/leads/LeadDetailTabs";
 import { ActivityTimeline } from "@/components/activities/ActivityTimeline";
 import { AddActivityForm } from "@/components/activities/AddActivityForm";
@@ -15,9 +17,10 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   const { id } = await params;
   const lead = await getLeadById(id);
   if (!lead) notFound();
-  const [activities, convertedClient] = await Promise.all([
+  const [activities, convertedClient, proposalList] = await Promise.all([
     getActivitiesByLead(lead.id),
     lead.convertedClientId ? getClientById(lead.convertedClientId) : Promise.resolve(null),
+    getProposalsByLead(lead.id),
   ]);
 
   const details = (
@@ -44,6 +47,8 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
     </div>
   );
 
+  const proposals = <ProposalsTab leadId={lead.id} proposals={proposalList} />;
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -57,7 +62,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
           {lead.stage === "won" && !lead.convertedClientId && <ConvertToClientButton leadId={lead.id} />}
         </div>
       </div>
-      <LeadDetailTabs details={details} activity={activity} />
+      <LeadDetailTabs details={details} activity={activity} proposals={proposals} />
     </div>
   );
 }
