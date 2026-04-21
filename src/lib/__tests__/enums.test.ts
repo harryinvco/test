@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { INDUSTRY, SOURCE, LEAD_STAGE, CLIENT_STATUS, ACTIVITY_TYPE, AGENT_TYPE, AGENT_STATUS, PROPOSAL_STATUS } from "@/lib/enums";
+import { INDUSTRY, SOURCE, LEAD_STAGE, CLIENT_STATUS, ACTIVITY_TYPE, AGENT_TYPE, AGENT_STATUS, PROPOSAL_STATUS, INVOICE_STATUS, EXPENSE_CATEGORY } from "@/lib/enums";
 
 describe("enums", () => {
   it("INDUSTRY includes all 5 verticals + other", () => {
@@ -26,7 +26,16 @@ describe("agent enums", () => {
   it("AGENT_STATUS covers the 4 terminal-ish states", () => {
     expect(AGENT_STATUS).toEqual(["streaming", "completed", "failed", "cancelled"]);
   });
-  it("PROPOSAL_STATUS has only 'draft' in v1", () => {
-    expect(PROPOSAL_STATUS).toEqual(["draft"]);
+  it("PROPOSAL_STATUS covers Module 5 workflow", () => {
+    expect(PROPOSAL_STATUS).toEqual(["draft", "sent", "accepted", "rejected"]);
+  });
+});
+
+describe("accounting enums", () => {
+  it("INVOICE_STATUS has 4 states", () => {
+    expect(INVOICE_STATUS).toEqual(["draft", "sent", "paid", "overdue"]);
+  });
+  it("EXPENSE_CATEGORY covers the v1 categories", () => {
+    expect(EXPENSE_CATEGORY).toEqual(["software", "travel", "marketing", "office", "contractor", "other"]);
   });
 });
