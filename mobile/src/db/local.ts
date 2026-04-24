@@ -138,7 +138,7 @@ export async function upsertRemoteTab(t: {
        updated_at = excluded.updated_at,
        deleted_at = excluded.deleted_at,
        dirty = 0
-     WHERE excluded.updated_at > note_tabs.updated_at`,
+     WHERE excluded.updated_at >= note_tabs.updated_at`,
     [t.id, t.date, t.label, t.position, t.createdAt, t.updatedAt, t.deletedAt],
   );
 }
@@ -168,7 +168,7 @@ export async function upsertRemoteNote(n: {
        updated_at = excluded.updated_at,
        deleted_at = excluded.deleted_at,
        dirty = 0
-     WHERE excluded.updated_at > notes.updated_at`,
+     WHERE excluded.updated_at >= notes.updated_at`,
     [
       n.id,
       n.tabId,
