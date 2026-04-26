@@ -5,7 +5,6 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +16,9 @@ import { getLogicalDate } from "@/lib/date";
 import { deriveTitle } from "@/lib/title";
 import type { LocalNote } from "@/db/schema";
 import { theme } from "@/ui/theme";
+import { MarkdownEditor, type MarkdownEditorHandle } from "@/editor/MarkdownEditor";
+import { EditorToolbar } from "@/editor/Toolbar";
+import type { EditorTheme as BridgeTheme } from "@/editor/bridge";
 
 type SaveStatus = "idle" | "saving" | "saved";
 
@@ -34,8 +36,14 @@ export default function NoteEditorScreen() {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingRef = useRef<string | null>(null);
   const savingIdRef = useRef<string | null>(null);
+  const editorRef = useRef<MarkdownEditorHandle>(null);
 
   const readOnly = note ? note.date !== today : false;
+  const editorTheme: BridgeTheme = {
+    bg: theme.paper,
+    fg: theme.ink,
+    accent: theme.oxblood,
+  };
   const derivedTitle =
     (note && note.titlePreview) || deriveTitle(draft) || "New note";
 
@@ -95,10 +103,10 @@ export default function NoteEditorScreen() {
     }, AUTOSAVE_DEBOUNCE_MS);
   }
 
-  function handleChange(text: string) {
+  const handleChange = useCallback((text: string) => {
     setDraft(text);
     scheduleSave(text);
-  }
+  }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!note) {
     return (
@@ -121,20 +129,16 @@ export default function NoteEditorScreen() {
             {derivedTitle}
           </Text>
         </View>
-        <TextInput
-          value={draft}
-          onChangeText={handleChange}
-          editable={!readOnly}
-          placeholder={readOnly ? "" : "Start typing…"}
-          placeholderTextColor={theme.inkFaint}
-          multiline
-          autoFocus={!readOnly && draft.length === 0}
-          textAlignVertical="top"
-          scrollEnabled
-          spellCheck
-          autoCorrect
-          style={[styles.editor, readOnly && styles.editorReadOnly]}
+        <MarkdownEditor
+          ref={editorRef}
+          content={draft}
+          readOnly={readOnly}
+          theme={editorTheme}
+          onChange={handleChange}
         />
+        {!readOnly && (
+          <EditorToolbar onAction={(a) => editorRef.current?.insertMarkdown(a)} />
+        )}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -170,18 +174,6 @@ const styles = StyleSheet.create({
 
   titleRow: { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 10 },
   title: { fontSize: 22, fontWeight: "500", color: theme.ink },
-
-  editor: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 20,
-    fontSize: 16,
-    lineHeight: 24,
-    color: theme.ink,
-    fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
-  },
-  editorReadOnly: { color: theme.inkMuted },
 
   headerIndicator: {
     flexDirection: "row",
