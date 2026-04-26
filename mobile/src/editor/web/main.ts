@@ -2,6 +2,7 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { markdown } from "@codemirror/lang-markdown";
+import { buildToolbarTransaction } from "./toolbarActions";
 
 // Runtime-minimal copies of the shared schemas. We keep them inline (not
 // imported) so the WebView bundle has zero deps on RN code.
@@ -88,7 +89,9 @@ function handle(msg: HostMessage) {
     return;
   }
   if (msg.kind === "insertMarkdown") {
-    // handled in Task 5
+    const spec = buildToolbarTransaction(view.state, msg.action);
+    view.dispatch(spec);
+    view.focus();
     return;
   }
 }
