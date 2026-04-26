@@ -3,6 +3,7 @@ import { EditorView, keymap } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { markdown } from "@codemirror/lang-markdown";
 import { buildToolbarTransaction } from "./toolbarActions";
+import { livePreview, livePreviewCss } from "./livePreview";
 
 // Runtime-minimal copies of the shared schemas. We keep them inline (not
 // imported) so the WebView bundle has zero deps on RN code.
@@ -55,6 +56,8 @@ function mount(initial: HostMessage & { kind: "init" }) {
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap]),
       markdown(),
+      livePreview,
+      livePreviewCss,
       EditorView.lineWrapping,
       themeCompartment.of(buildTheme(initial.theme)),
       readOnlyCompartment.of(EditorState.readOnly.of(initial.readOnly)),
