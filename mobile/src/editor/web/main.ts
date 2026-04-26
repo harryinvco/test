@@ -4,6 +4,7 @@ import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { markdown } from "@codemirror/lang-markdown";
 import { buildToolbarTransaction } from "./toolbarActions";
 import { livePreview, livePreviewCss } from "./livePreview";
+import { checkboxPlugin } from "./checkboxWidget";
 
 // Runtime-minimal copies of the shared schemas. We keep them inline (not
 // imported) so the WebView bundle has zero deps on RN code.
@@ -31,6 +32,7 @@ const themeCompartment = new Compartment();
 let view: EditorView | null = null;
 let lastEmitted = "";
 let changeTimer: ReturnType<typeof setTimeout> | null = null;
+let readOnlyFlag = false;
 
 function emitChangeDebounced(content: string) {
   if (content === lastEmitted) return;
@@ -50,6 +52,7 @@ function buildTheme(t: { bg: string; fg: string; accent: string }) {
 }
 
 function mount(initial: HostMessage & { kind: "init" }) {
+  readOnlyFlag = initial.readOnly;
   const state = EditorState.create({
     doc: initial.content,
     extensions: [
@@ -58,6 +61,7 @@ function mount(initial: HostMessage & { kind: "init" }) {
       markdown(),
       livePreview,
       livePreviewCss,
+      checkboxPlugin(() => readOnlyFlag),
       EditorView.lineWrapping,
       themeCompartment.of(buildTheme(initial.theme)),
       readOnlyCompartment.of(EditorState.readOnly.of(initial.readOnly)),
@@ -86,6 +90,7 @@ function handle(msg: HostMessage) {
     return;
   }
   if (msg.kind === "setReadOnly") {
+    readOnlyFlag = msg.readOnly;
     view.dispatch({
       effects: readOnlyCompartment.reconfigure(EditorState.readOnly.of(msg.readOnly)),
     });
