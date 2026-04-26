@@ -97,6 +97,24 @@ Then uncomment the `icon` / `splash` references in `app.json`.
 
 **401 auto-logout** — if the token is expired/revoked, `SyncProvider` calls `signOut()` and the router redirects to `/login`.
 
+## Editor
+
+Notes are edited in a CodeMirror 6 instance running inside a `react-native-webview`. Content is plain GFM Markdown — the same format the web app stores — so notes round-trip cleanly between devices.
+
+**Building the editor bundle:** the WebView loads `assets/editor/index.html` + `editor.js`, which are generated from `src/editor/web/` by `scripts/build-editor.mjs`. Regenerate after any change in `src/editor/web/`:
+
+```sh
+npm run build-editor
+```
+
+The outputs are committed to git so fresh clones don't need a build step.
+
+**Features:**
+- Live-preview: headings, bold/italic, inline code render as you type; raw syntax reappears on the cursor line.
+- Tappable checkboxes: `- [ ] todo` renders a tap-toggleable box.
+- Toolbar above the keyboard: ☑ • ⋮ list • H (cycles H1→H2→H3) • **B** • *I* • 🔗
+- Historical (non-today) notes render read-only with toolbar hidden and checkboxes inert.
+
 ## Sync protocol (recap)
 
 ```
