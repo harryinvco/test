@@ -1,0 +1,44 @@
+{
+  "cli": {
+    "version": ">= 13.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "base": {
+      "node": "20.11.0"
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "http://localhost:3000"
+      }
+    },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      }
+    },
+    "production": {
+      "extends": "base",
+      "autoIncrement": "buildNumber",
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://notes.innovaco.com.cy"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "dev@innovaco.com.cy",
+        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_ID"
+      }
+    }
+  }
+}

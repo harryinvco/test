@@ -13,8 +13,38 @@ const EnvSchema = z.object({
 
 export type Env = z.infer<typeof EnvSchema>;
 
+// ADMIN_PASSWORD_HASH can contain `$` which Next's dotenv-expand interprets as
+// variable references, silently stripping chunks of bcrypt output. To sidestep
+// this, the hash is stored base64-encoded in ADMIN_PASSWORD_HASH_B64 and
+// decoded here before Zod parsing.
+function resolvePasswordHash(
+  source: Record<string, string | undefined>,
+): string | undefined {
+  if (source.ADMIN_PASSWORD_HASH && source.ADMIN_PASSWORD_HASH.startsWith("$2")) {
+    return source.ADMIN_PASSWORD_HASH;
+  }
+  if (source.ADMIN_PASSWORD_HASH_B64) {
+    try {
+      return Buffer.from(source.ADMIN_PASSWORD_HASH_B64, "base64").toString("utf-8");
+    } catch {
+      return source.ADMIN_PASSWORD_HASH;
+    }
+  }
+  return source.ADMIN_PASSWORD_HASH;
+}
+
 export function parseEnv(source: Record<string, string | undefined>): Env {
-  const result = EnvSchema.safeParse(source);
+  // eslint-disable-next-line no-console
+  console.log("[env debug]", {
+    has_b64: !!source.ADMIN_PASSWORD_HASH_B64,
+    b64_len: (source.ADMIN_PASSWORD_HASH_B64 ?? "").length,
+    has_raw: !!source.ADMIN_PASSWORD_HASH,
+    raw_len: (source.ADMIN_PASSWORD_HASH ?? "").length,
+    admin_email: source.ADMIN_EMAIL,
+    auth_secret_len: (source.AUTH_SECRET ?? "").length,
+  });
+  const normalized = { ...source, ADMIN_PASSWORD_HASH: resolvePasswordHash(source) };
+  const result = EnvSchema.safeParse(normalized);
   if (!result.success) {
     const issues = result.error.issues
       .map((i) => `${i.path.join(".")}: ${i.message}`)
